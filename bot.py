@@ -21,24 +21,35 @@ async def ping(ctx):
 
 @bot.command(name='q')
 async def gpt3_ask(ctx, *, arg):
-    response = openai.Completion.create(
-      engine="davinci",
-      prompt=base_prompt+last_prompt_dict.get(ctx.guild.name, '')+arg+"\nA:",
-      temperature=0,
-      max_tokens=100,
-      top_p=1,
-      frequency_penalty=0,
-      presence_penalty=0.50,
-      stop=["\nQ:"]
-    )
-    last_prompt_dict[ctx.guild.name] = arg + "\nA:" + response.choices[0].text + "\n\nQ: "
-    print(f"Message sent in {ctx.guild.name}")
-    await ctx.send(response.choices[0].text[1:])
+    if len(arg) > 120:
+        await ctx.send("I'm sorry, this question is too large.")
+    else:
+        response = openai.Completion.create(
+          engine="davinci",
+          prompt=base_prompt+last_prompt_dict.get(ctx.guild.name, '')+arg+"\nA:",
+          temperature=0,
+          max_tokens=100,
+          top_p=1,
+          frequency_penalty=0,
+          presence_penalty=0.50,
+          stop=["\nQ:"]
+        )
+        answer = response.choices[0].text
+        last_prompt_dict[ctx.guild.id] = arg + "\nA:" + answer + "\n\nQ: "
+        print(f"Message sent in {ctx.guild.name}")
+        if answer[1:].strip() != "":
+            await ctx.send(answer[1:])
+        else:
+            await ctx.send("I have no answer to that question.")
 
 
 @bot.command(name="last")
 async def get_last(ctx):
-    await ctx.send(last_prompt_dict.get(ctx.guild.name, "None"))
+    last = last_prompt_dict.get(ctx.guild.name)
+    if last:
+        await ctx.send("Q: " + last[:-3])
+    else:
+        await ctx.send("None")
 
 @bot.command()
 async def info(ctx):
