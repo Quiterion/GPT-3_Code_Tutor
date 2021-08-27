@@ -28,7 +28,7 @@ async def gpt3_ask(ctx, *, arg):
           engine="davinci",
           prompt=base_prompt+last_prompt_dict.get(ctx.guild.name, '')+arg+"\nA:",
           temperature=0,
-          max_tokens=100,
+          max_tokens=50,
           top_p=1,
           frequency_penalty=0,
           presence_penalty=0.50,
