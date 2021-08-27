@@ -10,7 +10,7 @@ bot = commands.Bot(command_prefix='?', description="This is a GPT-3 derived bot 
 openai.api_key = os.getenv("OPENAI_API_KEY")
 token = os.getenv("DISCORD_API_KEY")
 
-base_prompt = "I am a highly intelligent question answering bot specializing in computer programming. I possess advanced knowledge in bash, C, Java, and Python. If I do not know the answer to a question, I will respond with 'I don't know'\n\nQ: What is a froopy in Python?\nA: I don't know\n\nQ: How do you open a file in C?\nA: Use the fopen() function. The syntax is:\nFILE *fopen(const char *filename, const char *mode)\n\nQ: "
+base_prompt = "I am a highly intelligent question answering bot specializing in computer programming. I possess advanced knowledge in bash, C, Java, and Python. If I do not know the answer to a question, I will respond with 'I don't know'\n\nQ: What is a froopy in Python?\nA: I don't know\n\nQ: How do you open a file in C?\nA: Use the fopen() function. The syntax is:\n`FILE *fopen(const char *filename, const char *mode)`\n\nQ: "
 
 last_prompt_dict = {}
 
@@ -79,7 +79,7 @@ async def gpt3_ask(ctx, *, arg):
     if len(arg) > 120:
         await ctx.send("I'm sorry, this question is too large.")
     else:
-        full_prompt = base_prompt+last_prompt_dict.get(ctx.guild.name, '')+arg+"\nA:"
+        full_prompt = base_prompt+last_prompt_dict.get(ctx.guild.id, '')+arg+"\nA:"
         response = openai.Completion.create(
           engine="davinci",
           prompt=full_prompt,
@@ -93,7 +93,7 @@ async def gpt3_ask(ctx, *, arg):
         answer = response.choices[0].text
 
         # Check for invalid output
-        if answer[1:].strip() = "" or check_completion_label(full_prompt) == "2":
+        if answer[1:].strip() == "" or check_completion_label(full_prompt) == "2":
             await ctx.send("I have no answer to that question.")
         else:
             # Store completion for context
@@ -117,8 +117,8 @@ async def info(ctx):
     embed.add_field(name="Server Owner", value=f"{ctx.guild.owner}")
     embed.add_field(name="Server Region", value=f"{ctx.guild.region}")
     embed.add_field(name="Server ID", value=f"{ctx.guild.id}")
-    embed.set_thumbnail(url=f"{ctx.guild.icon}")
-    # embed.set_thumbnail(url="https://pluralsight.imgix.net/paths/python-7be70baaac.png")
+    #embed.set_thumbnail(url=f"{ctx.guild.icon}")
+    embed.set_thumbnail(url="https://pluralsight.imgix.net/paths/python-7be70baaac.png")
 
     await ctx.send(embed=embed)
 
