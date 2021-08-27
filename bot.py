@@ -125,7 +125,7 @@ async def info(ctx):
 # Events
 @bot.event
 async def on_ready():
-    await bot.change_presence(activity=discord.CustomActivity(name="Drifting through cyberspace"))
+    await bot.change_presence(activity=discord.Activity(name="clusters and constellations of data. Like city lights, receding…", type=discord.ActivityType.watching))
     print('Online')
 
 
