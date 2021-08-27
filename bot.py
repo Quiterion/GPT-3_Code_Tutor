@@ -28,7 +28,7 @@ async def gpt3_ask(ctx, *, arg):
       max_tokens=100,
       top_p=1,
       frequency_penalty=0,
-      presence_penalty=0,
+      presence_penalty=0.50,
       stop=["\nQ:"]
     )
     print(f"Message sent in {ctx.guild.name}")
