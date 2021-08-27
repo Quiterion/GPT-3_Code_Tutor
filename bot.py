@@ -10,7 +10,7 @@ bot = commands.Bot(command_prefix='?', description="This is a GPT-3 derived bot 
 openai.api_key = os.getenv("OPENAI_API_KEY")
 token = os.getenv("DISCORD_API_KEY")
 
-base_prompt = "I am a highly intelligent question answering bot specializing in computer programming. I possess advanced knowledge in bash, C, Java, and Python. If I do not know the answer to a question, I will respond with 'I don't know'\n\nQ: What does 'static' mean in Java for methods?\nA: Static methods are methods that are associated with a class rather than an instance of a class.\nQ: What is a froopy in Python?\nA: I don't know\nQ: How do you open a file in C?\nA: Use the fopen() function. It takes the filename and access mode as parameters, and returns a FILE pointer.\nQ: "
+base_prompt = "I am a highly intelligent question answering bot specializing in computer programming. I possess advanced knowledge in bash, C, Java, and Python. If I do not know the answer to a question, I will respond with 'I don't know'\n\nQ: What does 'static' mean in Java for methods?\nA: Static methods are methods that are associated with a class rather than an instance of a class.\nQ: What is a froopy in Python?\nA: I don't know\nQ: How do you open a file in C?\nA: Use the fopen() function. The syntax is:\nFILE *fopen(const char *filename, const char *mode)\nQ: "
 
 
 # Commands
@@ -29,7 +29,7 @@ async def gpt3_ask(ctx, *, arg):
       top_p=1,
       frequency_penalty=0,
       presence_penalty=0,
-      stop=["\n"]
+      stop=["\nQ:"]
     )
     print(f"Message sent in {ctx.guild.name}")
     await ctx.send(response.choices[0].text[1:])
