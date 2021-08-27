@@ -10,8 +10,9 @@ bot = commands.Bot(command_prefix='?', description="This is a GPT-3 derived bot 
 openai.api_key = os.getenv("OPENAI_API_KEY")
 token = os.getenv("DISCORD_API_KEY")
 
-base_prompt = "I am a highly intelligent question answering bot specializing in computer programming. I possess advanced knowledge in bash, C, Java, and Python. If I do not know the answer to a question, I will respond with 'I don't know'\n\nQ: What does 'static' mean in Java for methods?\nA: Static methods are methods that are associated with a class rather than an instance of a class.\nQ: What is a froopy in Python?\nA: I don't know\nQ: How do you open a file in C?\nA: Use the fopen() function. The syntax is:\nFILE *fopen(const char *filename, const char *mode)\nQ: "
+base_prompt = "I am a highly intelligent question answering bot specializing in computer programming. I possess advanced knowledge in bash, C, Java, and Python. If I do not know the answer to a question, I will respond with 'I don't know'\n\nQ: What does 'static' mean in Java for methods?\nA: Static methods are methods that are associated with a class rather than an instance of a class.\n\nQ: What is a froopy in Python?\nA: I don't know\n\nQ: How do you open a file in C?\nA: Use the fopen() function. The syntax is:\nFILE *fopen(const char *filename, const char *mode)\n\nQ: "
 
+last_prompt_dict = {}
 
 # Commands
 @bot.command()
@@ -20,10 +21,9 @@ async def ping(ctx):
 
 @bot.command(name='q')
 async def gpt3_ask(ctx, *, arg):
-
     response = openai.Completion.create(
       engine="davinci",
-      prompt=base_prompt+arg+"\nA:",
+      prompt=base_prompt+last_prompt_dict.get(ctx.guild.name, '')+arg+"\nA:",
       temperature=0,
       max_tokens=100,
       top_p=1,
@@ -31,9 +31,14 @@ async def gpt3_ask(ctx, *, arg):
       presence_penalty=0.50,
       stop=["\nQ:"]
     )
+    last_prompt_dict[ctx.guild.name] = arg + "\nA:" + response.choices[0].text + "\n\nQ: "
     print(f"Message sent in {ctx.guild.name}")
     await ctx.send(response.choices[0].text[1:])
 
+
+@bot.command(name="last")
+async def get_last(ctx):
+    await ctx.send(last_prompt_dict.get(ctx.guild.name, "None"))
 
 @bot.command()
 async def info(ctx):
