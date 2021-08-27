@@ -10,7 +10,7 @@ bot = commands.Bot(command_prefix='?', description="This is a GPT-3 derived bot 
 openai.api_key = os.getenv("OPENAI_API_KEY")
 token = os.getenv("DISCORD_API_KEY")
 
-base_prompt = "I am a highly intelligent question answering bot specializing in computer programming. I possess advanced knowledge in bash, C, Java, and Python. If I do not know the answer to a question, I will respond with 'I don't know'\n\nQ: What does 'static' mean in Java for methods?\nA: Static methods are methods that are associated with a class rather than an instance of a class.\n\nQ: What is a froopy in Python?\nA: I don't know\n\nQ: How do you open a file in C?\nA: Use the fopen() function. The syntax is:\nFILE *fopen(const char *filename, const char *mode)\n\nQ: "
+base_prompt = "I am a highly intelligent question answering bot specializing in computer programming. I possess advanced knowledge in bash, C, Java, and Python. If I do not know the answer to a question, I will respond with 'I don't know'\n\nQ: What is a froopy in Python?\nA: I don't know\n\nQ: How do you open a file in C?\nA: Use the fopen() function. The syntax is:\nFILE *fopen(const char *filename, const char *mode)\n\nQ: "
 
 last_prompt_dict = {}
 
@@ -47,8 +47,8 @@ async def info(ctx):
     embed.add_field(name="Server Owner", value=f"{ctx.guild.owner}")
     embed.add_field(name="Server Region", value=f"{ctx.guild.region}")
     embed.add_field(name="Server ID", value=f"{ctx.guild.id}")
-    # embed.set_thumbnail(url=f"{ctx.guild.icon}")
-    embed.set_thumbnail(url="https://pluralsight.imgix.net/paths/python-7be70baaac.png")
+    embed.set_thumbnail(url=f"{ctx.guild.icon}")
+    # embed.set_thumbnail(url="https://pluralsight.imgix.net/paths/python-7be70baaac.png")
 
     await ctx.send(embed=embed)
 
