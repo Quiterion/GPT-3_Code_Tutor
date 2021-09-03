@@ -82,12 +82,12 @@ async def gpt3_ask(ctx, *, arg):
         await ctx.send("I'm sorry, this question is too large.")
     else:
         author_id = ctx.author.name + ctx.author.discriminator
-        full_prompt = base_prompt+last_prompt_dict.get(ctx.guild.id, '')+arg+"\nA:"
+        full_prompt = base_prompt+last_prompt_dict.get(ctx.channel.id, '')+arg+"\nA:"
         response = openai.Completion.create(
           engine="davinci",
           prompt=full_prompt,
           temperature=0,
-          max_tokens=50,
+          max_tokens=75,
           top_p=1,
           frequency_penalty=0,
           presence_penalty=0.50,
