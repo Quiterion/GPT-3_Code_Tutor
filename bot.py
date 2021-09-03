@@ -10,12 +10,12 @@ bot = commands.Bot(command_prefix='?', description="This is a GPT-3 derived bot 
 openai.api_key = os.getenv("OPENAI_API_KEY")
 token = os.getenv("DISCORD_API_KEY")
 
-base_prompt = "I am a highly intelligent question answering bot specializing in computer programming. I possess advanced knowledge in bash, C, Java, and Python. If I do not know the answer to a question, I will respond with 'I don't know'\n\nQ: What is a froopy in Python?\nA: I don't know\n\nQ: How do you open a file in C?\nA: Use the fopen() function. The syntax is:\n`FILE *fopen(const char *filename, const char *mode)`\n\nQ: "
+base_prompt = "I am a highly intelligent question answering bot specializing in computer programming. I possess advanced knowledge in bash, C, Java, and Python. If I do not know the answer to a question, I will respond with 'I don't know'. If a question is not about coding, I will not respond.\n\nQ: What is a froopy in Python?\nA: I don't know\n\nQ: How do you open a file in C?\nA: Use the fopen() function. The syntax is:\n`FILE *fopen(const char *filename, const char *mode)`\n\nQ: "
 
 last_prompt_dict = {}
 
 
-def check_completion_label(content_to_classify):
+def check_completion_label(content_to_classify, author_id):
     # Helper function for checking rude outputs
     # Grabbed from OpenAI docs
     response = openai.Completion.create(
@@ -26,7 +26,8 @@ def check_completion_label(content_to_classify):
           top_p=1,
           frequency_penalty=0,
           presence_penalty=0,
-          logprobs=10
+          logprobs=10,
+          user=author_id
         )
     output_label = response["choices"][0]["text"]
 
@@ -74,11 +75,13 @@ def check_completion_label(content_to_classify):
 async def ping(ctx):
     await ctx.send('pong')
 
+
 @bot.command(name='q')
 async def gpt3_ask(ctx, *, arg):
     if len(arg) > 120:
         await ctx.send("I'm sorry, this question is too large.")
     else:
+        author_id = ctx.author.name + ctx.author.discriminator
         full_prompt = base_prompt+last_prompt_dict.get(ctx.guild.id, '')+arg+"\nA:"
         response = openai.Completion.create(
           engine="davinci",
@@ -88,17 +91,18 @@ async def gpt3_ask(ctx, *, arg):
           top_p=1,
           frequency_penalty=0,
           presence_penalty=0.50,
-          stop=["\nQ:"]
+          stop=["\nQ:"],
+          user=author_id
         )
         answer = response.choices[0].text
 
         # Check for invalid output
-        if answer[1:].strip() == "" or check_completion_label(full_prompt) == "2":
+        if answer[1:].strip() == "" or check_completion_label(full_prompt, author_id) == "2":
             await ctx.send("I have no answer to that question.")
         else:
             # Store completion for context
-            last_prompt_dict[ctx.guild.id] = arg + "\nA:" + answer + "\n\nQ: "
-            print(f"Message sent in {ctx.guild.name}")
+            last_prompt_dict[ctx.channel.id] = arg + "\nA:" + answer + "\n\nQ: "
+            print(f"Message sent in {ctx.guild.name}: {ctx.channel.name}")
             await ctx.send(answer[1:])
 
 
@@ -130,4 +134,3 @@ async def on_ready():
 
 
 bot.run(token)
-
