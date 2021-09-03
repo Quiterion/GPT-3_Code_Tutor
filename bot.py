@@ -118,11 +118,11 @@ async def get_last(ctx):
 async def info(ctx):
     embed = discord.Embed(title=f"{ctx.guild.name}", description="", timestamp=datetime.datetime.utcnow(), color=discord.Color.blue())
     embed.add_field(name="Server created at", value=f"{ctx.guild.created_at}")
-    embed.add_field(name="Server Owner", value=f"{ctx.guild.owner}")
+    embed.add_field(name="Server Owner", value=f"{ctx.guild.owner.name}")
     embed.add_field(name="Server Region", value=f"{ctx.guild.region}")
     embed.add_field(name="Server ID", value=f"{ctx.guild.id}")
-    #embed.set_thumbnail(url=f"{ctx.guild.icon}")
-    embed.set_thumbnail(url="https://pluralsight.imgix.net/paths/python-7be70baaac.png")
+    embed.set_thumbnail(url=f"{str(ctx.guild.icon_url)}")
+    #embed.set_thumbnail(url="https://pluralsight.imgix.net/paths/python-7be70baaac.png")
 
     await ctx.send(embed=embed)
 
