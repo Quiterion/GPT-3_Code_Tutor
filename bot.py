@@ -108,7 +108,7 @@ async def gpt3_ask(ctx, *, arg):
 
 @bot.command(name="last")
 async def get_last(ctx):
-    last = last_prompt_dict.get(ctx.guild.id)
+    last = last_prompt_dict.get(ctx.channel.id)
     if last:
         await ctx.send("Q: " + last[:-3])
     else:
