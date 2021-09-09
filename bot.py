@@ -108,6 +108,7 @@ async def gpt3_ask(ctx, *, arg):
             await ctx.send(answer[1:])
             if ctx.guild is not None:
                 print(f"Message sent in {ctx.guild.name}: {ctx.channel.name}")
+                print(f"Guild ID: {ctx.guild.id}")
             elif ctx.channel.type == discord.ChannelType.private:
                 print(f"Message sent in DM to: {ctx.channel.recipient}")
 
