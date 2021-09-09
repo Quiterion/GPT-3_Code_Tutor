@@ -83,6 +83,7 @@ async def gpt3_ask(ctx, *, arg):
     if len(arg) > 120:
         await ctx.send("I'm sorry, this question is too large.")
     else:
+        await ctx.channel.trigger_typing()
         author_id = ctx.author.name + ctx.author.discriminator
         full_prompt = base_prompt+last_prompt_dict.get(ctx.channel.id, '')+arg+"\nA:"
         response = openai.Completion.create(
@@ -104,8 +105,12 @@ async def gpt3_ask(ctx, *, arg):
         else:
             # Store completion for context
             last_prompt_dict[ctx.channel.id] = arg + "\nA:" + answer + "\n\nQ: "
-            print(f"Message sent in {ctx.guild.name}: {ctx.channel.name}")
             await ctx.send(answer[1:])
+            if ctx.guild is not None:
+                print(f"Message sent in {ctx.guild.name}: {ctx.channel.name}")
+            elif ctx.channel.type == discord.ChannelType.private:
+                print(f"Message sent in DM to: {ctx.channel.recipient}")
+
 
 
 @bot.command(name="last")
