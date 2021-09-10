@@ -160,7 +160,7 @@ class misc(commands.Cog):
 # Events
 @bot.event
 async def on_ready():
-    await bot.change_presence(activity=discord.Activity(name="clusters and constellations of data. Like city lights, receding…", type=discord.ActivityType.watching))
+    await bot.change_presence(activity=discord.Activity(name="?help for help, ?q to ask questions :)", type=discord.ActivityType.watching))
     print('Online')
 
 
