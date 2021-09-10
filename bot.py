@@ -94,7 +94,7 @@ async def gpt3_ask(ctx, *, arg):
           top_p=1,
           frequency_penalty=0,
           presence_penalty=0.50,
-          stop=["\nQ:"],
+          stop=["\nQ:","\nA:"],
           user=author_id
         )
         answer = response.choices[0].text
