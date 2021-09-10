@@ -137,6 +137,7 @@ class misc(commands.Cog):
     async def servinfo(self, ctx):
         try:
             embed = discord.Embed(title=f"{ctx.guild.name}", description="", timestamp=datetime.datetime.utcnow(), color=discord.Color.blue())
+            embed.set_author(name=f"{self.bot.user.name}", icon_url=f"{self.bot.user.avatar_url}")
             embed.add_field(name="Server created at", value=f"{ctx.guild.created_at}")
             embed.add_field(name="Server Owner", value=f"{ctx.guild.owner}")
             embed.add_field(name="Server Region", value=f"{ctx.guild.region}")
